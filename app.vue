@@ -1,5 +1,12 @@
+<script setup>
+useHead({
+  title: 'minimalist todo list'
+})</script>
+
 <template>
-  <div>
-    <NuxtPage />
-  </div>
+  <NuxtPage />
 </template>
+
+<style scoped></style>
+
+
