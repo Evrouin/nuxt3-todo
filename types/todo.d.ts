@@ -4,4 +4,5 @@ export interface Todo {
   body: string;
   completed: boolean;
   deleted: boolean;
+  editing: boolean;
 }
