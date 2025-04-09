@@ -1,7 +1,7 @@
 <script setup>
 useHead({
   title: 'minimalist todo list'
-})</script>
+});</script>
 
 <template>
   <NuxtPage />
