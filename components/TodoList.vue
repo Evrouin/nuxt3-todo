@@ -1,54 +1,49 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, ref } from 'vue';
-import type { Todo } from '@/types';
+import { ref } from 'vue'
+import type { Todo } from '@/types'
+import { useTodoStore } from '~/stores/todos'
+import { storeToRefs } from 'pinia'
 
-const props = defineProps<{
-    todos: Todo[];
-}>();
+const todoStore = useTodoStore()
+const isTodoEmptyMessage = ref('No todos available')
 
-const isTodoEmptyMessage = ref("No todos available");
-
-const emit = defineEmits<{
-    (e: 'delete-todo', id: number, deleted: boolean): void;
-    (e: 'update-todo', todo: Todo): void;
-}>();
+const { filteredTodos } = storeToRefs(todoStore)
 
 const editTodo = (todo: Todo) => {
-    todo.editing = true;
-};
+  todo.editing = true
+}
 
 const saveTodo = (todo: Todo) => {
-    if (!todo.title.trim() || !todo.body.trim()) {
-        return;
-    }
-    todo.editing = false;
-    emit('update-todo', { ...todo });
-};
+  if (!todo.title.trim() || !todo.body.trim()) return
+  todo.editing = false
+  todoStore.updateTodo({ ...todo })
+}
 
 const toggleCompletion = (todo: Todo) => {
-    todo.completed = !todo.completed;
-    emit('update-todo', { ...todo });
-};
+  todo.completed = !todo.completed
+  todoStore.updateTodo({ ...todo })
+}
 
 const deleteTodo = (todo: Todo) => {
-    emit('delete-todo', todo.id, todo.deleted);
-};
+  todoStore.deleteTodo(todo.id, todo.deleted)
+}
 
 const handleTitleInput = (event: Event, todo: Todo) => {
-    const input = event.target as HTMLInputElement;
-    input.value = input.value.toLowerCase();
-    todo.title = input.value;
-};
+  const input = event.target as HTMLInputElement
+  input.value = input.value.toLowerCase()
+  todo.title = input.value
+}
 
 const handleBodyInput = (event: Event, todo: Todo) => {
-    const input = event.target as HTMLTextAreaElement;
-    input.value = input.value.toLowerCase();
-    todo.body = input.value;
-};
+  const input = event.target as HTMLTextAreaElement
+  input.value = input.value.toLowerCase()
+  todo.body = input.value
+}
 </script>
 
+
 <template>
-    <div v-if="props.todos.length === 0" class="flex justify-center items-center">
+    <div v-if="filteredTodos.length === 0" class="flex justify-center items-center">
         <div class="p-5 border-0.5 border-slate-500 rounded-lg bg-gray-900 shadow-md flex flex-col gap-2 mb-5 w-full">
             <span class="text-sm text-white lowercase text-wrap break-words text-center">
                 {{ isTodoEmptyMessage }}
@@ -56,7 +51,7 @@ const handleBodyInput = (event: Event, todo: Todo) => {
         </div>
     </div>
 
-    <div v-for="todo in props.todos" :key="todo.id" class="flex justify-center items-center w-full">
+    <div v-for="todo in filteredTodos" :key="todo.id" class="flex justify-center items-center w-full">
         <div :class="[ 'p-5 border-0.5 rounded-lg shadow-md flex flex-col gap-2 mb-5 w-full', todo.completed ? 'bg-gray-700 opacity-50' : 'bg-gray-800 hover:px-6 hover:bg-gray-900 transition-all duration-200']">
             <div class="flex items-center justify-between w-full">
                 <span v-if="!todo.editing" class="text-md text-white font-bold lowercase flex-grow" @click="editTodo(todo)">

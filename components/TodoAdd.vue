@@ -1,49 +1,53 @@
 <script setup lang="ts">
-import { ref, computed, defineEmits } from 'vue';
+import { ref, computed } from 'vue'
+import { useTodoStore } from '~/stores/todos';
 
-const title = ref<string>('');
-const body = ref<string>('');
+const todoStore = useTodoStore()
 
-const emit = defineEmits<{
-    (e: 'add-todo', todo: { id: number; title: string; body: string; completed: boolean; deleted: boolean }): void;
-}>();
+const title = ref<string>('')
+const body = ref<string>('')
 
-const isValidTodo = computed(() => title.value.trim().length > 0 && body.value.trim().length > 0);
+const isValidTodo = computed(() =>
+  title.value.trim().length > 0 && body.value.trim().length > 0
+)
 
 const addTodo = () => {
-    if (!isValidTodo.value) return;
+  if (!isValidTodo.value) return
 
-    const todo = {
-        id: Date.now(),
-        title: title.value.toLowerCase(),
-        body: body.value.toLowerCase(),
-        completed: false,
-        deleted: false,
-    };
+  const todo = {
+    id: Date.now(),
+    title: title.value.toLowerCase(),
+    body: body.value.toLowerCase(),
+    completed: false,
+    deleted: false,
+    editing: false,
+  }
 
-    emit('add-todo', todo);
+  todoStore.addTodo(todo)
 
-    title.value = '';
-    body.value = '';
+  title.value = ''
+  body.value = ''
 
-    setTimeout(() => {
+  setTimeout(() => {
         title.value = '';
         body.value = '';
     }, 100);
-};
+
+}
 
 const handleTitleInput = (event: Event) => {
-    const input = event.target as HTMLInputElement;
-    input.value = input.value.toLowerCase();
-    title.value = input.value; 
-};
+  const input = event.target as HTMLInputElement
+  input.value = input.value.toLowerCase()
+  title.value = input.value
+}
 
 const handleBodyInput = (event: Event) => {
-    const input = event.target as HTMLTextAreaElement;
-    input.value = input.value.toLowerCase();
-    body.value = input.value;
-};
+  const input = event.target as HTMLTextAreaElement
+  input.value = input.value.toLowerCase()
+  body.value = input.value
+}
 </script>
+
 
 <template>
     <form @submit.prevent="addTodo">
