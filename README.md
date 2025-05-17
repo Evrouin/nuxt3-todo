@@ -1,24 +1,14 @@
-# Nuxt Minimal Starter
+# 📝 minimalist todo list
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+## 🚀 Features
 
-## Setup
-
-Make sure to install dependencies:
-
-```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
+- 📦 State management with [Pinia](https://pinia.vuejs.org/)
+- 💾 LocalStorage persistence
+- 🎯 Filterable todos: All, Active, Completed, Deleted
+- ✅ Toggle completion
+- ✏️ Update tasks
+- 🗑️ Soft and permanent deletion
+- 💨 Built with Nuxt 3, TailwindCSS, and TypeScript
 
 ## Development Server
 
